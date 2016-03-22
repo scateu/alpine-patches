@@ -1,0 +1,169 @@
+From 69d8a88987413f6eed782fb095633b68cf67bd49 Mon Sep 17 00:00:00 2001
+From: Eduardo Chappa <chappa@washington.edu>
+Date: Mon, 21 Mar 2016 20:06:07 -0600
+Subject: [PATCH 1/1]    * Fix a bug that makes Alpine not wrap lines correctly
+ in HTML messages      when the position for wrapping is at a wide UTF-8 code
+ point.
+
+---
+ pith/filter.c | 52 ++++++++++++++++++++++++++++++++++++++++------------
+ pith/pine.hlp | 18 +++++++++++++-----
+ 2 files changed, 53 insertions(+), 17 deletions(-)
+
+diff --git a/pith/filter.c b/pith/filter.c
+index d8c3654..5136d8d 100644
+--- a/pith/filter.c
++++ b/pith/filter.c
+@@ -3255,9 +3255,9 @@ void	  html_newline(FILTER_S *);
+ void	  html_output(FILTER_S *, int);
+ void	  html_output_string(FILTER_S *, char *);
+ void	  html_output_raw_tag(FILTER_S *, char *);
+-void	  html_output_normal(FILTER_S *, int, int);
++void	  html_output_normal(FILTER_S *, int, int, int);
+ void	  html_output_flush(FILTER_S *);
+-void	  html_output_centered(FILTER_S *, int, int);
++void	  html_output_centered(FILTER_S *, int, int, int);
+ void	  html_centered_handle(int *, char *, int);
+ void	  html_centered_putc(WRAPLINE_S *, int);
+ void	  html_centered_flush(FILTER_S *);
+@@ -8064,7 +8064,7 @@ html_output(FILTER_S *f, int ch)
+ {
+     UCS uc;
+     int width;
+-    void (*o_f)(FILTER_S *, int, int) = CENTER_BIT(f) ? html_output_centered : html_output_normal;
++    void (*o_f)(FILTER_S *, int, int, int) = CENTER_BIT(f) ? html_output_centered : html_output_normal;
+ 
+     /*
+      * if ch is a control token, just pass it on, else, collect
+@@ -8072,13 +8072,13 @@ html_output(FILTER_S *f, int ch)
+      * output routines
+      */
+     if(ch == TAG_EMBED || HD(f)->embedded.state || (ch > 0xff && IS_LITERAL(ch) == 0)){
+-	(*o_f)(f, ch, 1);
++	(*o_f)(f, ch, 1, 0);
+     }
+     else if(utf8_to_ucs4_oneatatime(ch & 0xff, &(HD(f)->cb), &uc, &width)){
+ 	unsigned char *cp;
+ 
+ 	for(cp = HD(f)->cb.cbuf; cp <= HD(f)->cb.cbufend; cp++){
+-	    (*o_f)(f, *cp, width);
++	    (*o_f)(f, *cp, width, HD(f)->cb.cbufend - cp);
+ 	    width = 0;		/* only count it once */
+ 	}
+ 
+@@ -8190,8 +8190,11 @@ html_event_attribute(char *attr)
+ 
+ 
+ void
+-html_output_normal(FILTER_S *f, int ch, int width)
++html_output_normal(FILTER_S *f, int ch, int width, int remaining)
+ {
++    static int written = 0;
++    static int cwidth;
++
+     if(HD(f)->centered){
+ 	html_centered_flush(f);
+ 	fs_give((void **) &HD(f)->centered->line.buf);
+@@ -8264,15 +8267,28 @@ html_output_normal(FILTER_S *f, int ch, int width)
+ 	    if(HD(f)->prefix)
+ 	      html_a_prefix(f);
+ 
+-	    if((f->f2 += width) + 1 >= WRAP_COLS(f)){
++	    if(written == 0)
++	      cwidth = width;
++
++	    if(f->f2 + cwidth + 1 >= WRAP_COLS(f)){
+ 		HTML_LINEP_PUTC(f, ch & 0xff);
+-		HTML_FLUSH(f);
+-		html_newline(f);
++		written++;
++		if(remaining == 0){
++		  HTML_FLUSH(f);
++		  html_newline(f);
++		}
+ 		if(HD(f)->in_anchor)
+ 		  html_write_anchor(f, HD(f)->in_anchor);
+ 	    }
+-	    else
++	    else{
+ 	      HTML_LINEP_PUTC(f, ch & 0xff);
++	      written++;
++	    }
++
++	    if(remaining == 0){
++	      written = 0;
++	      f->f2 += cwidth;
++	    }
+ 	}
+     }
+     else{
+@@ -8423,8 +8439,11 @@ html_output_flush(FILTER_S *f)
+  * html_output_centered - managed writing centered text
+  */
+ void
+-html_output_centered(FILTER_S *f, int ch, int width)
++html_output_centered(FILTER_S *f, int ch, int width, int remaining)
+ {
++    static int written;
++    static int cwidth;
++
+     if(!HD(f)->centered){		/* new text? */
+ 	html_output_flush(f);
+ 	if(f->n)			/* start on blank line */
+@@ -8529,7 +8548,16 @@ html_output_centered(FILTER_S *f, int ch, int width)
+ 	  html_centered_flush(f);
+ 
+ 	html_centered_putc(&HD(f)->centered->word, ch);
+-	HD(f)->centered->word.width++;
++
++	if(written == 0)
++	  cwidth = width;
++
++	written++;
++
++	if(remaining == 0){
++	   written = 0;
++	   HD(f)->centered->word.width += cwidth;
++	}
+     }
+ }
+ 
+diff --git a/pith/pine.hlp b/pith/pine.hlp
+index 6b3ec1b..ce2beef 100644
+--- a/pith/pine.hlp
++++ b/pith/pine.hlp
+@@ -187,6 +187,10 @@ Additions include:
+ 
+   <LI> Added support for RFC 2971 - IMAP ID extension.
+ 
++  <LI> Add configuration <A href="h_config_ignore_size"><!--#echo var="FEAT_ignore-size-changes"--></A>
++       that allows users to ignore errors in the computation of the size
++       of a message from defective servers.
++
+   <LI> Ignore message from smtp server after a successful authentication
+        challenge.
+ 
+@@ -335,11 +339,15 @@ Bugs that have been addressed include:
+        of the certificate to lowercase, which may make Alpine not be able 
+        to read such certificate. Reported by Dennis Davis.
+ 
+-  <LI> Bug: Crash when attempting to read a message after a bounce 
+-       command. In order to produce a crash one needed to use the ^T 
+-       subcommand and do a search in a LDAP directory. The crash is 
+-       produced by changes to the text in the title bar. Reported by 
+-       Heinrich Mislik in the Alpine-info list.
++  <LI> Crash when attempting to read a message after a bounce command. 
++       In order to produce a crash one needed to use the ^T subcommand and 
++       do a search in a LDAP directory. The crash is produced by changes 
++       to the text in the title bar. Reported by Heinrich Mislik in the 
++       Alpine-info list.
++
++  <LI> HTML messages that contain UTF-8 may wrap at the wrong position,
++       making Alpine not display the correct character at the position 
++       that wrapping is done.
+ 
+   <LI> Pico: Searching for a string that is too long causes Pico to crash
+        in the next search.
+-- 
+1.9.1
+
