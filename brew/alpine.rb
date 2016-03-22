@@ -32,6 +32,11 @@ class Alpine < Formula
     sha1 "171100e1ed6233f1434fd09ad9667d6595c75642"
   end if build.with? "gb18030-patch"
 
+  patch do
+    url "https://github.com/scateu/alpine-patches/raw/master/0003-Fix-a-bug-that-makes-Alpine-not-wrap-lines-correctly.patch"
+    sha1 "793be6f73a356a91b11b8b61181663987b20777d"
+  end if build.with? "wrap-line-patch"
+
   def install
     ENV.j1
     system "./configure", "--disable-debug",

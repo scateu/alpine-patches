@@ -1,4 +1,4 @@
  -> /usr/local/Library/Formula/alpine.rb
 
 
-$ brew install alpine --with-maildir-patch --with-ldaps-patch --with-gb18030-patch
+$ brew install alpine --with-maildir-patch --with-ldaps-patch --with-gb18030-patch --with-wrap-line-patch
