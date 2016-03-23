@@ -16,25 +16,26 @@ class Alpine < Formula
   option "with-maildir-patch", "Apply maildir patch"
   option "with-ldaps-patch", "Apply ldaps patch"
   option "with-gb18030-patch", "Apply gb18030 patch"
+  option "with-wrap-line-patch", "Apply UTF8 wrap line bugfix"
 
   patch do
     url "http://patches.freeiz.com/alpine/patches/alpine-2.20/maildir.patch.gz"
-    sha1 "7ae3d7faa19c33a773e3820cf7bcae99ac69a5c4"
+    sha256 "1ef0932b80d7f790ce6577a521a7b613b5ce277bb13cbaf0116bb5de1499caaa"
   end if build.with? "maildir-patch"
 
   patch do
     url "https://github.com/scateu/alpine-patches/raw/master/0001-Add-a-require-ldapssl-on-connection-switch-to-suppor.patch"
-    sha1 "e97e5844cbc4ad384cf6a35441641420931403d6"
+    sha256 "290bb480afd9ed7e921e7c691dfa003531fe02dc7eb1155d0cae661ba230e6e4"
   end if build.with? "ldaps-patch"
 
   patch do
     url "https://github.com/scateu/alpine-patches/raw/master/0002-Add-GB18030-charset-support.patch"
-    sha1 "171100e1ed6233f1434fd09ad9667d6595c75642"
+    sha256 "db09624b162112a3c6a23a181302b7870b7d2e03f66fc08e6c84013cf495acaf"
   end if build.with? "gb18030-patch"
 
   patch do
     url "https://github.com/scateu/alpine-patches/raw/master/0003-Fix-a-bug-that-makes-Alpine-not-wrap-lines-correctly.patch"
-    sha1 "793be6f73a356a91b11b8b61181663987b20777d"
+    sha256 "9e5f8243da1e4b4cad1d7c96b81bfb98aec57fe2d28d71e8049bc367f36ee514"
   end if build.with? "wrap-line-patch"
 
   def install
