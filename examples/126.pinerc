@@ -80,7 +80,7 @@ initial-keystroke-list=
 default-composer-hdrs=
 
 # Add these customized headers (and possible default values) when composing
-customized-hdrs=TODO <TODO@126.com>
+customized-hdrs=From: TODO <TODO@126.com>
 
 # When viewing messages, include this list of headers
 viewer-hdrs=
