@@ -449,7 +449,7 @@ new-version-threshold=
 disable-these-drivers=
 
 # List of SASL authenticators to disable.
-disable-these-authenticators=
+disable-these-authenticators=PLAIN
 
 # Set by Alpine; contains data for caching remote address books.
 remote-abook-metafile=
