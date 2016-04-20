@@ -335,7 +335,7 @@ TLS_CACERT C:\msys64\usr\ssl\cert.pem
 
 <https://github.com/scateu/alpine-patches/releases>
 
-You can find a working alpine release as well as a [ldap-library-and-include-files-with-openssl.zip]()
+You can find a working alpine release as well as a [ldap-library-and-include-files-with-openssl.zip](https://github.com/scateu/alpine-patches/releases)
 contains the `ldap/` directory for reference.
 
 ## TODO
