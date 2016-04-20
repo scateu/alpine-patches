@@ -67,7 +67,7 @@ and `oldap32.lib`
 ### 3.1 Remove old LDAP library
 
 The old LDAP library is located on `ldap\`. Just remove them all.
-Plus, the `ldap32.dll` on `alpine\` is not needed any more.
+Plus, the `alpine\ldap32.dll` is not needed any more.
 
 Then add OpenLDAP library and include files into `ldap\` folder.
 
