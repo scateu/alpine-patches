@@ -1,0 +1,28 @@
+diff --git a/build.bat b/build.bat
+index a88a1a4..100572e 100644
+--- a/build.bat
++++ b/build.bat
+@@ -39,10 +39,12 @@ set ldaplibes=
+ goto noldapwnt
+ :yesldapwnt
+ echo including LDAP functionality
+-set ldapflags=-I\"%ALPINE_LDAP%\"\inckit -DENABLE_LDAP
+-set ldaplibes=\"%ALPINE_LDAP%\"\binaries\release\ldap32.lib
++set ldapflags=-I\"%ALPINE_LDAP%\"\openldap -I\"%ALPINE_LDAP%\"\openssl\include  -DENABLE_LDAP
++set ldaplibes="%ALPINE_LDAP%\oldap32.lib %ALPINE_LDAP%\olber32.lib %ALPINE_LDAP%\openssl\lib\libeay32MT.lib %ALPINE_LDAP%\openssl\lib\ssleay32MT.lib"
++rem MD: Shared,  MT: Static
++rem set ldaplibes="%ALPINE_LDAP%\oldap32.lib %ALPINE_LDAP%\olber32.lib %ALPINE_LDAP%\openssl\lib\libeay32MD.lib %ALPINE_LDAP%\openssl\lib\ssleay32MD.lib"
+ :noldapwnt
+-set extracflagsnq=/Zi -Od %ldapflags% -D_USE_32BIT_TIME_T -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DSPCL_REMARKS=\"\\\"\\\"\"
++set extracflagsnq=/DWINVER=0x0501 /Zi -Od %ldapflags% -D_USE_32BIT_TIME_T -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DSPCL_REMARKS=\"\\\"\\\"\"
+ set extralibes=
+ set extralibesalpine=%ldaplibes%
+ set extrarcflags="/D_PCP_WNT"
+@@ -193,6 +195,7 @@ goto buildalpine
+ echo Building alpine...
+ cd alpine
+ nmake -nologo -f %alpinemake% wnt=1 EXTRACFLAGS=%extracflags% EXTRALDFLAGS=%extraldflags% EXTRALIBES=%extralibesalpine% EXTRARCFLAGS=%extrarcflags% %extramakecommand%
++goto fini
+ if errorlevel 1 goto bogus
+ cd ..
+ goto buildcclntdll

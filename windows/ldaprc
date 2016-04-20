@@ -1,0 +1,3 @@
+#TLS_CACERT C:\msys64\usr\ssl\cert.pem
+TLS_CACERT cert.pem
+
