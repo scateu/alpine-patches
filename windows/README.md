@@ -342,3 +342,4 @@ contains the `ldap/` directory for reference.
 
  - Windows stalling problem
  - TLS support on Windows
+ - Sometime you have to press `Ctrl-L` to refresh off some dead characters on screen
