@@ -42,7 +42,7 @@ For example:
 Since I don't have a CRYUS SASL library, and I don't know what it is. I just commented out
 the support of CRYUS SASL for now.
 
-```
+```diff
 D:\alpine-code\openldap>git diff include/portable.h
 diff --git a/include/portable.h b/include/portable.h
 index e65f54f..15a57bb 100644
@@ -151,7 +151,7 @@ Then modify `build.bat` and `pith/ldap.c` based on my patches. (Provided in this
 
 The most significant changes of `build.bat` are:
 
-```
+```diff
 -set ldapflags=-I\"%ALPINE_LDAP%\"\inckit -DENABLE_LDAP
 -set ldaplibes=\"%ALPINE_LDAP%\"\binaries\release\ldap32.lib
 +set ldapflags=-I\"%ALPINE_LDAP%\"\openldap -I\"%ALPINE_LDAP%\"\openssl\include  -DENABLE_LDAP
@@ -163,7 +163,7 @@ The most significant changes of `build.bat` are:
 
 The changes of `pith/ldap.c` are:
 
-```
+```diff
 diff --git a/pith/ldap.c b/pith/ldap.c
 index 09df8ef..ab0b173 100644
 --- a/pith/ldap.c
