@@ -1,7 +1,7 @@
 class Alpine < Formula
   desc "News and email agent"
-  homepage "http://patches.freeiz.com/alpine/"
-  url "http://patches.freeiz.com/alpine/release/src/alpine-2.21.tar.xz"
+  homepage "http://alpine.freeiz.com/alpine/"
+  url "http://alpine.freeiz.com/alpine/release/src/alpine-2.21.tar.xz"
   sha256 "6030b6881b8168546756ab3a5e43628d8d564539b0476578e287775573a77438"
 
   depends_on "openssl"
@@ -10,7 +10,7 @@ class Alpine < Formula
   option "with-gb18030-patch", "Apply gb18030 patch"
 
   patch do
-    url "http://patches.freeiz.com/alpine/patches/alpine-2.21/maildir.patch.gz"
+    url "http://alpine.freeiz.com/alpine/patches/alpine-2.21/maildir.patch.gz"
     sha256 "1229ea9ec4e150dda1d2da866730a777148874e4667c54cd2c488101b5db8099"
   end if build.with? "maildir-patch"
 
