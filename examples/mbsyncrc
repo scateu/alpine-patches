@@ -1,0 +1,21 @@
+IMAPStore scateu@fastmail.com
+Host "mail.messagingengine.com"
+Port 993
+User "scateu@fastmail.com"
+PassCmd "cat ~/.mail_pass"
+SSLType IMAPS
+
+MaildirStore mail-store
+Path /media/Hik1TB/Mails/Fastmail/
+Inbox /media/Hik1TB/Mails/Fastmail/INBOX
+SubFolders Verbatim
+
+Channel fastmail-all
+Master :scateu@fastmail.com:
+Slave :mail-store:
+Expunge Both
+Create Both
+Syncstate *
+Sync All
+CopyArrivalDate yes 
+Patterns * 
