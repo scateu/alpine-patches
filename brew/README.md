@@ -13,3 +13,44 @@
     xcode-select --install
 
 重新激活一下
+
+
+---
+
+或在`brew edit alpine`里加一行
+
+```ruby
+patch :DATA
+```
+然后再文件末尾加上
+
+```
+From 02b0c57b80bef5a9a9b9618f108cb6b0ef396bdb Mon Sep 17 00:00:00 2001
+From: scateu <scateu@gmail.com>
+Date: Sat, 22 Aug 2015 16:28:34 +0800
+Subject: [PATCH] Add GB18030 charset support.
+To: chappa@gmx.com
+
+GB18030 is a Chinese charset, basically it completely equals to GBK.
+Some mail provider use GB18030 like QQ Mail,
+which has large number of users in China for now.
+---
+ imap/src/c-client/utf8.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/imap/src/c-client/utf8.c b/imap/src/c-client/utf8.c
+index 844abef..f676ba3 100644
+--- a/imap/src/c-client/utf8.c
++++ b/imap/src/c-client/utf8.c
+@@ -166,6 +166,8 @@ static const CHARSET utf8_csvalid[] = {
+      (void *) &gb_param,SC_CHINESE_SIMPLIFIED,NIL},
+   {"GB2312",CT_DBYTE,CF_PRIMARY | CF_DISPLAY | CF_POSTING,
+    (void *) &gb_param,SC_CHINESE_SIMPLIFIED,"GBK"},
++  {"GB18030",CT_DBYTE,CF_DISPLAY,
++     (void *) &gb_param,SC_CHINESE_SIMPLIFIED,"GBK"},
+   {"CN-GB",CT_DBYTE,CF_DISPLAY,
+      (void *) &gb_param,SC_CHINESE_SIMPLIFIED,"GBK"},
+ #ifdef CNS1TOUNICODE
+-- 
+2.5.0
+```
