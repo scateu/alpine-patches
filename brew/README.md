@@ -15,9 +15,13 @@
 重新激活一下
 
 
----
+# UPDATE
 
-或在`brew edit alpine`里加一行
+(更新于2020年5月17日)
+
+鉴于其它几个Patch已经合并进去了,只有GBK的这个(而QQ邮箱过来的大部分是GB18030),而Eduardo大哥觉得还是想有空学一学中文,搞明白GBK和GB18030的细小区别之后再合并.
+
+于是只Patch GBK的话,可以在 `brew edit alpine`里加一行
 
 ```ruby
 patch :DATA
