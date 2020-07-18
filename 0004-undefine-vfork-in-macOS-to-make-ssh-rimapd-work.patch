@@ -1,0 +1,25 @@
+From f977595d78df6d01790db3d4793e7a7e6bcbf0af Mon Sep 17 00:00:00 2001
+From: scateu <scateu@gmail.com>
+Date: Sun, 19 Jul 2020 05:08:18 +0800
+Subject: [PATCH] undefine vfork
+
+---
+ imap/src/osdep/unix/os_osx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/imap/src/osdep/unix/os_osx.c b/imap/src/osdep/unix/os_osx.c
+index e09806c..b51d405 100644
+--- a/imap/src/osdep/unix/os_osx.c
++++ b/imap/src/osdep/unix/os_osx.c
+@@ -45,7 +45,7 @@ extern int errno;		/* just in case */
+ #include "ftl_unix.c"
+ #include "nl_unix.c"
+ #include "env_unix.c"
+-#define fork vfork
++//#define fork vfork
+ #include "getspnam.c"
+ #include "tcp_unix.c"
+ #include "gr_wait4.c"
+-- 
+2.27.0
+
