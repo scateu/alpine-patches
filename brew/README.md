@@ -59,3 +59,12 @@ index 844abef..f676ba3 100644
 -- 
 2.5.0
 ```
+
+# Tips
+
+```bash
+ALL_PROXY=socks5://localhost:1080 brew reinstall -s alpine
+
+brew install patchutils
+combinediff 0001-disable-double-fork-to-make-ssh-work-in-macOS.patch 0002-gbk.patch  > combined.patch
+```
