@@ -29,6 +29,7 @@ patch :DATA
 然后再文件末尾加上
 
 ```
+__END__
 From 02b0c57b80bef5a9a9b9618f108cb6b0ef396bdb Mon Sep 17 00:00:00 2001
 From: scateu <scateu@gmail.com>
 Date: Sat, 22 Aug 2015 16:28:34 +0800
