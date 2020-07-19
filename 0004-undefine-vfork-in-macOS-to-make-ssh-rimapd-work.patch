@@ -3,6 +3,7 @@ From: scateu <scateu@gmail.com>
 Date: Sun, 19 Jul 2020 05:08:18 +0800
 Subject: [PATCH] undefine vfork
 
+fixed, see https://repo.or.cz/alpine.git/commit/55b383f6efe5a13d54e19317fbf6ec095369189c
 ---
  imap/src/osdep/unix/os_osx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
